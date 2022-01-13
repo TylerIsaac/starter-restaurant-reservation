@@ -1,14 +1,34 @@
 # Capstone: Restaurant Reservation System
 
-> You have been hired as a full stack developer at _Periodic Tables_, a startup that is creating a reservation system for fine dining restaurants.
+> The Periodic Tables application software is a reservation system for fine dining restaurants designed for managing multiple daily and future reservations, and seating parties accordingly.
 > The software is used only by restaurant personnel when a customer calls to request a reservation.
 > At this point, the customers will not access the system online.
 
-There are no user stories for deployment: it is expected that you will deploy the application to production after you finish a user story.
+## Key Features
 
-There are no user stories for logging: it is expected that you will add logging to the application with enough detail to help you diagnose issues in production.
+1. View all reservations for the current day, or a date in the future
+1. Create and edit reservations (name, date, time, mobile-number, party-size)
+1. Assign a reservation to a specific table
+1. Clear a table in the system when the reservation leaves
+1. Search for reservations by mobile number
+1. Cancel a reservation
 
-## Existing files
+## Tech
+
+### Frontend
+1. Javascript
+1. React.js
+1. HTML5
+1. Bootstrap
+1. CSS3
+
+## Screenshots
+
+https://share.getcloudapp.com/KouYrpD0
+
+[![An old rock in the desert](/assets/images/shiprock.jpg "Shiprock, New Mexico by Beau Rogers")](https://share.getcloudapp.com/KouYrpD0)
+
+
 
 This repository is set up as a *monorepo*, meaning that the frontend and backend projects are in one repository. This allows you to open both projects in the same editor.
 
