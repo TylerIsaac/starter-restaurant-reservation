@@ -26,7 +26,7 @@
 
 https://share.getcloudapp.com/KouYrpD0
 
-[![An old rock in the desert](/assets/images/shiprock.jpg "Shiprock, New Mexico by Beau Rogers")](https://share.getcloudapp.com/KouYrpD0)
+![This is an image](https://share.getcloudapp.com/KouYrpD0)
 
 
 
