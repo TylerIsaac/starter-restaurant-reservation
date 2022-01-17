@@ -1,73 +1,89 @@
-import React, { useState } from "react";
-import ErrorAlert from "../layout/ErrorAlert";
-import { listReservations } from "../utils/api";
 import ReservationRow from "../dashboard/ReservationRow";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import ErrorAlert from "../layout/ErrorAlert";
+import { searchReservation } from "../utils/api";
 
 /**
- * Here, the user can search a reservation by mobile number
+ * Defines the create reservation page.
+ * @param today date of today
+ * @param updateDate function to update date displayed on dashboard
+ *  the date for which the user wants to view reservations.
+ * @returns {JSX.Element}
  */
-export default function Search() {
-  const [mobileNumber, setMobileNumber] = useState("");
+
+function SearchReservation() {
+  const initialFormState = {
+    mobile_number: "",
+  };
+
+  const [formData, setFormData] = useState({ ...initialFormState });
+  const [reservationsError, setReservationsError] = useState(null);
   const [reservations, setReservations] = useState([]);
-  const [error, setError] = useState(null);
+  const history = useHistory();
 
-  /**
-   * Whenever the user makes changes to the form, update the state
-   */
-  function handleChange({ target }) {
-    setMobileNumber(target.value);
-  }
+  const handleChange = ({ target }) => {
+    setReservationsError(null);
+    setFormData({
+      ...formData,
+      [target.name]: target.value,
+    });
+  };
 
-  /**
-   * Whenever the user submits form, validate and make API call
-   */
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
+    setReservationsError(null);
     event.preventDefault();
+    try {
+      const abortController = new AbortController();
 
-    const abortController = new AbortController();
+      const searchResults = await searchReservation(
+        formData,
+        abortController.signal
+      );
 
-    setError(null);
-
-    listReservations({ mobile_number: mobileNumber }, abortController.signal)
-      .then(setReservations)
-      .catch(setError);
-
-    return () => abortController.abort();
+      if (searchResults.length) {
+        setReservations(searchResults);
+      } else {
+        setReservations([]);
+        throw new Error("No reservations found");
+      }
+    } catch (error) {
+      setReservationsError(error);
+    }
   }
 
-  const searchResultsJSX = () => {
-    return reservations.length > 0 ? (
-      reservations.map((reservation) => (
-        <ReservationRow
-          key={reservation.reservation_id}
-          reservation={reservation}
-        />
-      ))
-    ) : (
-      <tr>
-        <td>No reservations found</td>
-      </tr>
-    );
+  const handleCancel = (event) => {
+    event.preventDefault();
+    history.goBack();
   };
 
   return (
     <div>
       <form>
-        <ErrorAlert error={error} />
+        <ErrorAlert error={reservationsError} />
 
         <label className="form-label" htmlFor="mobile_number">
           Enter a customer's phone number:
         </label>
         <input
           className="form-control"
-          name="mobile_number"
-          id="mobile_number"
           type="tel"
-          onChange={handleChange}
-          value={mobileNumber}
+          id="mobile_number"
+          name="mobile_number"
           required
+          minLength="1"
+          axLength="15"
+          value={formData.mobile_number}
+          onChange={handleChange}
+          placeholder="555-555-1234"
         />
-
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="btn btn-secondary m-1 rounded-pill"
+        >
+          Cancel
+        </button>
         <button
           className="btn btn-primary m-1"
           type="submit"
@@ -94,8 +110,15 @@ export default function Search() {
           </tr>
         </thead>
 
-        <tbody>{searchResultsJSX()}</tbody>
+        <tbody>
+          {reservations.map((reservation) => (
+            <div className="" key={reservation.reservation_id}>
+              <ReservationRow reservation={reservation} />
+            </div>
+          ))}
+        </tbody>
       </table>
     </div>
   );
 }
+export default SearchReservation;

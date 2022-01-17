@@ -95,7 +95,7 @@ export default function NewReservation({ loadDashboard, edit }) {
         editReservation(reservation_id, formData, abortController.signal)
           .then(loadDashboard)
           .then(() =>
-            history.push(`/dashboard?date=${formData.reservation_date}`)
+            history.push(`/dashboard?date=${(formData.reservation_date).format('YYYY-MM-DD')}`)
           )
           .catch(setApiError);
       } else {

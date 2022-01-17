@@ -113,6 +113,25 @@
  
    return await fetchJson(url, { headers, signal, method: "POST", body }, []);
  }
+
+ export async function searchReservation(params, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations`);
+
+  if (params) {
+    Object.entries(params).forEach(([key, value]) =>
+      url.searchParams.append(key, value.toString())
+    );
+  }
+
+  const options = {
+    method: "GET",
+    headers,
+    signal,
+  };
+  return await fetchJson(url, options)
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}
  
  /**
   * Seats a reservation at a table.
